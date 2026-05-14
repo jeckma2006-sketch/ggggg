@@ -16,7 +16,15 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 .mob-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.5rem;letter-spacing:-.01em;text-transform:uppercase;background:linear-gradient(180deg,#FFD9C2 0%,var(--orange) 60%,var(--orange-dark) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(0 0 12px rgba(232,84,30,.5))}
 .mob-logo em{font-style:normal;-webkit-text-fill-color:rgba(255,255,255,.5);font-size:.88rem;font-weight:700;letter-spacing:.06em}
 
-.mob-video-wrap{position:fixed;top:48px;left:0;right:0;bottom:0;background:#000;overflow:hidden}
+/* Mobile: video in normal flow, height = full viewport minus header */
+.mob-video-wrap{
+  position:relative;
+  width:100%;
+  height:calc(100dvh - 48px);
+  margin-top:48px;
+  background:#000;
+  overflow:hidden;
+}
 
 #vaVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 
@@ -92,7 +100,7 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 .desk-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(232,84,30,.12);border:1px solid rgba(232,84,30,.35);color:var(--orange);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:4px;margin-bottom:20px}
 .desk-tag::before{content:'';width:6px;height:6px;background:var(--orange);border-radius:50%;animation:pulse-dot 1.5s ease-in-out infinite;flex-shrink:0}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-.desk-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(3rem,4vw,5rem);letter-spacing:-.02em;text-transform:uppercase;line-height:.88;background:linear-gradient(180deg,#FFD9C2 0%,var(--orange) 55%,var(--orange-dark) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 24px rgba(232,84,30,.55));margin-bottom:4px}
+.desk-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(3.5rem,5vw,6rem);letter-spacing:-.02em;text-transform:uppercase;line-height:.88;background:linear-gradient(180deg,#FFE0CC 0%,#FF6B35 40%,var(--orange) 70%,var(--orange-dark) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 28px rgba(232,84,30,.7));margin-bottom:4px;animation:giga-glow 2.2s ease-in-out infinite}
 .desk-sub{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(.9rem,1.3vw,1.2rem);text-transform:uppercase;color:rgba(255,255,255,.6);letter-spacing:.05em;margin-bottom:22px}
 .desk-sub span{color:var(--orange)}
 .desk-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
@@ -120,7 +128,15 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 .desk-testi-author{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.3)}
 .desk-stars{color:#F59E0B;font-size:.62rem;margin-bottom:3px}
 
-@keyframes va-pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes giga-glow{0%,100%{filter:drop-shadow(0 4px 28px rgba(232,84,30,.7))}50%{filter:drop-shadow(0 4px 50px rgba(232,84,30,1)) drop-shadow(0 0 80px rgba(255,107,53,.5))}}
+
+/* Floating quiz button */
+.floating-quiz{position:fixed;bottom:24px;right:20px;z-index:9999;display:none;animation:float-in .4s ease}
+.floating-quiz.visible{display:flex}
+.floating-quiz-btn{display:flex;align-items:center;gap:9px;background:var(--orange);color:white;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;padding:13px 20px;border-radius:50px;box-shadow:0 6px 30px rgba(232,84,30,.6);transition:transform .2s;animation:quiz-pulse 1.3s ease-in-out infinite;-webkit-tap-highlight-color:transparent}
+.floating-quiz-btn:active{transform:scale(.96)}
+@keyframes float-in{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes quiz-pulse{0%,100%{box-shadow:0 6px 30px rgba(232,84,30,.6)}50%{box-shadow:0 6px 44px rgba(232,84,30,1)}}
 
 /* ══ SCROLLABLE LANDING BELOW VIDEO ══ */
 :root{
@@ -128,9 +144,8 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
   --font-display:'Barlow Condensed',sans-serif;--font-body:'Barlow',sans-serif;
 }
 .landing-content{background:var(--white);color:var(--dark)}
-/* Mobile spacer: push content below fixed video */
-.mob-spacer{height:100dvh;display:block}
-@media(min-width:900px){.mob-spacer{display:none}}
+/* Spacer not needed - video is normal flow now */
+.mob-spacer{display:none}
 
 /* Proof bar */
 .proof-bar{background:var(--dark);padding:16px 0;overflow:hidden;position:relative}
@@ -246,7 +261,34 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 .footer-links{display:flex;gap:18px}
 .footer-links a{font-size:.76rem;color:rgba(255,255,255,.3);text-decoration:none}
 
-/* Reveal */
+/* Luce e Gas */
+.lc-lucegas{background:var(--dark)}
+.lc-lucegas .lc-title{color:white}
+.lc-lucegas .lc-sub{color:rgba(255,255,255,.6)}
+.lg-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+@media(max-width:900px){.lg-inner{grid-template-columns:1fr}}
+.lg-saving-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:32px 28px;margin-bottom:24px}
+.lg-saving-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:3.2rem;color:#4ECDC4;line-height:1;margin-bottom:7px}
+.lg-saving-label{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.5}
+.lg-benefits{display:flex;flex-direction:column;gap:14px}
+.lg-benefit{display:flex;gap:14px;align-items:flex-start}
+.lg-benefit-icon{width:38px;height:38px;border-radius:50%;background:rgba(78,205,196,.15);border:1px solid rgba(78,205,196,.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.lg-benefit-content h4{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.95rem;text-transform:uppercase;color:white;margin-bottom:3px}
+.lg-benefit-content p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.5}
+.lg-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:28px;margin-bottom:18px}
+.lg-card-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.1rem;text-transform:uppercase;color:#4ECDC4;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.lg-card ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.lg-card ul li{display:flex;gap:9px;font-size:.85rem;color:rgba(255,255,255,.72);line-height:1.45;align-items:flex-start}
+.lg-card ul li::before{content:'✓';color:#4ECDC4;font-weight:800;flex-shrink:0;margin-top:1px}
+.lg-cta-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:#4ECDC4;color:#0A3D3A;text-decoration:none;font-weight:700;font-size:.95rem;padding:15px 24px;border-radius:8px;transition:background .2s;width:100%;margin-top:6px}
+.lg-note{font-size:.74rem;color:rgba(255,255,255,.3);text-align:center;margin-top:8px;line-height:1.5}
+
+/* Quiz CTA banner */
+.quiz-cta-banner{background:linear-gradient(135deg,rgba(232,84,30,.12),rgba(232,84,30,.05));border:1px solid rgba(232,84,30,.25);border-radius:14px;padding:28px 32px;text-align:center;max-width:700px;margin:0 auto}
+.quiz-cta-banner p{font-size:.95rem;color:rgba(0,0,0,.65);line-height:1.6;margin-bottom:18px}
+.quiz-cta-banner .lc-tag{display:block;margin-bottom:8px}
+.btn-quiz{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:white;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;padding:16px 28px;border-radius:8px;box-shadow:0 4px 22px rgba(232,84,30,.45);animation:quiz-pulse 1.3s ease-in-out infinite}
+@keyframes va-pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
 .reveal-delay-1{transition-delay:.1s}
@@ -387,6 +429,14 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 
 </div><!-- /desk-layout -->
 
+<!-- FLOATING QUIZ BUTTON — appare scorrendo -->
+<div class="floating-quiz" id="floatingQuiz">
+  <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" class="floating-quiz-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    ⚡ Compila il quiz
+  </a>
+</div>
+
 <!-- Mobile spacer: spinge il contenuto sotto il video fisso -->
 <div class="mob-spacer"></div>
 
@@ -455,6 +505,12 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
       <p>Il contratto ha 12 pagine di condizioni. Il call center ti legge solo il prezzo promozionale. Poi scopri il costo a regime, i vincoli e i costi di recesso.</p>
       <div class="fact">→ Da noi ogni voce viene spiegata prima di firmare qualsiasi cosa</div>
     </div>
+  </div>
+  <div style="text-align:center;margin-top:44px">
+    <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" class="btn-quiz reveal">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      ⚡ Compila il quiz e trova la tua offerta
+    </a>
   </div>
 </section>
 
@@ -545,6 +601,53 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
       <div class="testi-stars">★★★★★</div>
       <p class="testi-text">"Finalmente qualcuno che ti spiega le cose come stanno, senza tecnicismi. Ho attivato 3 SIM per tutta la famiglia. Ogni volta che ho un dubbio passo da lui."</p>
       <div class="testi-author"><div class="testi-avatar">R</div><div><div class="testi-name">Roberto C.</div><div class="testi-meta">Casalbordino · Artigiano · Cliente da 3 anni</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LUCE E GAS -->
+<section class="lc-section lc-lucegas" id="lucegasSection">
+  <div class="lg-inner">
+    <div>
+      <span class="lc-tag reveal" style="color:#4ECDC4">Luce &amp; Gas</span>
+      <h2 class="lc-title reveal">Non solo telefono.<br>Risparmia anche<br>in bolletta.</h2>
+      <p class="lc-sub reveal">Molti clienti di Vasto non sanno che da noi puoi gestire anche luce e gas. Abbinandoli al telefono, il risparmio medio supera i 200 euro all'anno.</p>
+      <div class="lg-saving-box reveal">
+        <div class="lg-saving-num">200€+</div>
+        <div class="lg-saving-label">risparmio medio annuo per chi abbina<br>luce &amp; gas al contratto telefonico</div>
+      </div>
+      <div class="lg-benefits reveal">
+        <div class="lg-benefit"><div class="lg-benefit-icon">⚡</div><div class="lg-benefit-content"><h4>Un solo interlocutore</h4><p>Telefono, fibra, luce e gas. Tutto gestito da Andrea in un unico posto. Niente call center separati.</p></div></div>
+        <div class="lg-benefit"><div class="lg-benefit-icon">📈</div><div class="lg-benefit-content"><h4>Prezzo bloccato 24 mesi</h4><p>Le nostre offerte energia hanno il contributo fisso bloccato per 2 anni. Nessuna sorpresa in bolletta.</p></div></div>
+        <div class="lg-benefit"><div class="lg-benefit-icon">📋</div><div class="lg-benefit-content"><h4>Analisi gratuita della bolletta</h4><p>Porti la tua bolletta attuale in negozio. Andrea la analizza e ti dice esattamente quanto puoi risparmiare.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="lg-card reveal">
+        <div class="lg-card-title"><span>⚡</span> Offerta Luce</div>
+        <ul>
+          <li>Prezzo indicizzato PUN — segue il mercato all'ingrosso</li>
+          <li>Contributo fisso annuo bloccato 24 mesi</li>
+          <li>Condizioni riservate ai clienti Wind Tre</li>
+          <li>Attivazione in negozio con la bolletta attuale</li>
+          <li>Nessuna interruzione della fornitura durante il cambio</li>
+        </ul>
+      </div>
+      <div class="lg-card reveal">
+        <div class="lg-card-title"><span>🔥</span> Offerta Gas</div>
+        <ul>
+          <li>Prezzo indicizzato PSV — mercato all'ingrosso</li>
+          <li>Contributo fisso annuo bloccato 24 mesi</li>
+          <li>Condizioni riservate ai clienti Wind Tre</li>
+          <li>Attivazione contestuale alla luce per massimo risparmio</li>
+          <li>Andrea ti spiega ogni voce prima di firmare qualsiasi cosa</li>
+        </ul>
+      </div>
+      <a href="https://wa.me/393931230333?text=Ciao%20Andrea%2C%20ho%20visto%20il%20sito%20e%20vorrei%20sapere%20quanto%20posso%20risparmiare%20su%20luce%20e%20gas!" class="lg-cta-btn reveal" target="_blank">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.557 4.125 1.529 5.858L.057 23.944l6.255-1.639A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        Scopri quanto risparmi su luce &amp; gas
+      </a>
+      <div class="lg-note">Porta la tua bolletta attuale — Andrea la analizza gratis, senza impegno</div>
     </div>
   </div>
 </section>
@@ -647,6 +750,15 @@ function vaReset(){vaS={step:'V0',nome:'',phone:'',zona:'',a:{},lgInt:false,hist
 // Reveal on scroll
 var revealObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});},{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(function(el){revealObs.observe(el);});
+
+// Floating quiz button: show after scrolling past video
+window.addEventListener('scroll',function(){
+  var fq=document.getElementById('floatingQuiz');
+  if(!fq) return;
+  var threshold=window.innerHeight*0.8;
+  if(window.scrollY>threshold) fq.classList.add('visible');
+  else fq.classList.remove('visible');
+},{passive:true});
 
 // FAQ
 function toggleFaq(btn){
