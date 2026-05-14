@@ -73,7 +73,7 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 
 /* ══ DESKTOP (≥900px) ══ */
 @media(min-width:900px){
-  body{overflow:hidden;height:100vh}
+  body{overflow-x:hidden}
   .mob-header{display:none}
   .mob-video-wrap{position:relative;top:auto;left:auto;right:auto;bottom:auto;width:100%;height:100vh;flex-shrink:0;border-left:2px solid rgba(232,84,30,.25);border-right:2px solid rgba(232,84,30,.25);box-shadow:0 0 80px rgba(232,84,30,.3)}
   .va-panel{display:none !important}
@@ -121,6 +121,149 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 .desk-stars{color:#F59E0B;font-size:.62rem;margin-bottom:3px}
 
 @keyframes va-pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+
+/* ══ SCROLLABLE LANDING BELOW VIDEO ══ */
+:root{
+  --light:#F5F3F0;--white:#FFFFFF;--dark:#1A1A1A;--dark-2:#2D2D2D;--mid:#5A5A5A;--border:#E8E4DF;
+  --font-display:'Barlow Condensed',sans-serif;--font-body:'Barlow',sans-serif;
+}
+.landing-content{background:var(--white);color:var(--dark)}
+/* Mobile spacer: push content below fixed video */
+.mob-spacer{height:100dvh;display:block}
+@media(min-width:900px){.mob-spacer{display:none}}
+
+/* Proof bar */
+.proof-bar{background:var(--dark);padding:16px 0;overflow:hidden;position:relative}
+.proof-bar::before,.proof-bar::after{content:'';position:absolute;top:0;width:100px;height:100%;z-index:2}
+.proof-bar::before{left:0;background:linear-gradient(to right,var(--dark),transparent)}
+.proof-bar::after{right:0;background:linear-gradient(to left,var(--dark),transparent)}
+.proof-track{display:flex;white-space:nowrap;animation:scroll-left 28s linear infinite;width:max-content}
+@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.proof-item{display:inline-flex;align-items:center;gap:12px;padding:0 32px;font-family:var(--font-display);font-weight:700;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.proof-item .dot{width:5px;height:5px;background:var(--orange);border-radius:50%;flex-shrink:0}
+
+/* Sections */
+.lc-section{padding:80px 5%}
+.lc-tag{display:inline-block;font-weight:700;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--orange);margin-bottom:16px}
+.lc-title{font-family:var(--font-display);font-weight:900;font-size:clamp(1.8rem,3.5vw,3rem);line-height:1.05;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:18px}
+.lc-sub{font-size:1rem;color:var(--mid);line-height:1.7;max-width:560px;margin-bottom:44px}
+
+/* Problema */
+.lc-problema{background:var(--light)}
+.drama-box{max-width:1100px;margin:0 auto 50px;background:var(--dark);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+.drama-col{padding:44px 40px}
+.drama-col.bad{background:var(--dark-2);border-right:2px solid var(--orange)}
+.drama-label{font-family:var(--font-display);font-weight:900;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.drama-col.bad .drama-label{color:rgba(255,255,255,.4)}
+.drama-col.good .drama-label{color:var(--orange)}
+.drama-scenario{font-size:.98rem;color:rgba(255,255,255,.75);line-height:1.7}
+.drama-scenario strong{color:white}
+.drama-highlight{margin-top:18px;font-family:var(--font-display);font-weight:900;font-size:1.8rem;line-height:1.1}
+.drama-col.bad .drama-highlight{color:rgba(255,255,255,.3)}
+.drama-col.good .drama-highlight{color:var(--orange)}
+.problem-cards{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.problem-card{background:var(--white);border-radius:12px;padding:32px 28px;border:1px solid var(--border);border-top:4px solid var(--orange)}
+.problem-card-num{font-family:var(--font-display);font-weight:900;font-size:2.8rem;color:rgba(232,84,30,.12);line-height:1;margin-bottom:14px}
+.problem-card h3{font-family:var(--font-display);font-weight:800;font-size:1.1rem;text-transform:uppercase;margin-bottom:10px}
+.problem-card p{font-size:.9rem;color:var(--mid);line-height:1.65}
+.problem-card .fact{margin-top:16px;padding:10px 14px;background:var(--light);border-radius:7px;font-size:.82rem;font-weight:700;color:var(--orange)}
+
+/* Soluzione */
+.lc-soluzione{background:var(--white)}
+.soluzione-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start}
+.soluzione-features{display:flex;flex-direction:column;gap:24px;margin-top:28px}
+.feature-row{display:flex;gap:18px;align-items:flex-start}
+.feature-num{font-family:var(--font-display);font-weight:900;font-size:2.2rem;color:var(--orange);line-height:1;flex-shrink:0;width:44px}
+.feature-content h4{font-family:var(--font-display);font-weight:800;font-size:1rem;text-transform:uppercase;margin-bottom:5px}
+.feature-content p{font-size:.9rem;color:var(--mid);line-height:1.6}
+.soluzione-img{border-radius:14px;overflow:hidden;margin-bottom:24px}
+.soluzione-img img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.value-card{background:var(--dark);border-radius:14px;padding:32px 28px;color:white}
+.value-card-title{font-family:var(--font-display);font-weight:900;font-size:1.3rem;text-transform:uppercase;margin-bottom:5px;color:var(--orange)}
+.value-card-sub{font-size:.85rem;color:rgba(255,255,255,.55);margin-bottom:22px}
+.value-card ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.value-card ul li{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;color:rgba(255,255,255,.82);line-height:1.45}
+.value-card ul li::before{content:'✓';color:var(--orange);font-weight:800;flex-shrink:0;margin-top:1px}
+.value-card .guarantee{font-size:.75rem;color:rgba(255,255,255,.4);text-align:center;line-height:1.5;margin-top:12px}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:white;text-decoration:none;font-weight:700;font-size:.98rem;padding:15px 26px;border-radius:7px;transition:background .2s,transform .2s;box-shadow:0 4px 20px rgba(232,84,30,.4);justify-content:center;width:100%}
+.btn-primary:active{background:var(--orange-dark)}
+
+/* Come funziona */
+.lc-come-funziona{background:var(--dark);padding:80px 5%}
+.lc-come-funziona .lc-title{color:white}
+.lc-come-funziona .lc-sub{color:rgba(255,255,255,.6)}
+.steps-wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.08);border-radius:14px;overflow:hidden}
+.step-item{background:var(--dark);padding:44px 36px;position:relative}
+.step-num{font-family:var(--font-display);font-weight:900;font-size:4.5rem;color:rgba(232,84,30,.15);line-height:1;position:absolute;top:24px;right:24px}
+.step-icon{font-size:2rem;margin-bottom:18px;display:block}
+.step-title{font-family:var(--font-display);font-weight:800;font-size:1.15rem;text-transform:uppercase;color:white;margin-bottom:10px}
+.step-desc{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.65}
+
+/* Testimonianze */
+.lc-testi{background:var(--light)}
+.testi-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.testi-card{background:var(--white);border-radius:12px;padding:32px 28px;border:1px solid var(--border);display:flex;flex-direction:column;gap:18px}
+.testi-stars{display:flex;gap:3px;color:#F59E0B;font-size:.95rem}
+.testi-text{font-size:.95rem;color:var(--dark);line-height:1.7;flex:1;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px;border-top:1px solid var(--border);padding-top:18px}
+.testi-avatar{width:42px;height:42px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:1.1rem;color:white;flex-shrink:0}
+.testi-name{font-weight:700;font-size:.88rem;color:var(--dark);margin-bottom:2px}
+.testi-meta{font-size:.75rem;color:var(--mid)}
+
+/* FAQ */
+.lc-faq{background:var(--white)}
+.faq-wrap{max-width:780px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{width:100%;background:none;border:none;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:18px;cursor:pointer;text-align:left;font-family:var(--font-body);font-weight:700;font-size:.98rem;color:var(--dark);transition:color .2s}
+.faq-q:hover,.faq-q.open{color:var(--orange)}
+.faq-icon{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:border-color .2s,transform .3s;color:var(--mid)}
+.faq-q.open .faq-icon{border-color:var(--orange);color:var(--orange);transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;font-size:.94rem;color:var(--mid);line-height:1.7}
+.faq-a.open{max-height:300px;padding-bottom:22px}
+
+/* CTA finale */
+.lc-cta{background:var(--dark);padding:90px 5%;text-align:center;position:relative;overflow:hidden}
+.lc-cta .lc-title{color:white;font-size:clamp(2.2rem,4vw,3.8rem);margin-bottom:18px}
+.lc-cta-sub{font-size:1.02rem;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:44px;max-width:600px;margin-left:auto;margin-right:auto}
+.cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.btn-wa{display:inline-flex;align-items:center;gap:12px;background:#25D366;color:white;text-decoration:none;font-weight:700;font-size:1.05rem;padding:18px 32px;border-radius:10px;transition:background .2s;box-shadow:0 6px 30px rgba(37,211,102,.35)}
+.btn-call{display:inline-flex;align-items:center;gap:12px;background:var(--orange);color:white;text-decoration:none;font-weight:700;font-size:1.05rem;padding:18px 32px;border-radius:10px;box-shadow:0 6px 30px rgba(232,84,30,.35)}
+.cta-reassure{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 22px}
+.reassure-item{display:flex;align-items:center;gap:6px;font-size:.8rem;color:rgba(255,255,255,.5);font-weight:500}
+.reassure-item::before{content:'✓';color:var(--orange)}
+
+/* Footer */
+.lc-footer{background:#111;padding:50px 5% 28px;border-top:2px solid rgba(255,255,255,.06)}
+.footer-top{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-brand-name{font-family:var(--font-display);font-weight:900;font-size:1.7rem;text-transform:uppercase;color:white;margin-bottom:7px}
+.footer-brand-name span{color:var(--orange)}
+.footer-payoff{font-size:.88rem;color:rgba(255,255,255,.45);line-height:1.5;max-width:300px;margin-bottom:14px}
+.footer-info h4{font-family:var(--font-display);font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-bottom:18px}
+.footer-info ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-info ul li{display:flex;gap:9px;font-size:.85rem;color:rgba(255,255,255,.6);align-items:flex-start;line-height:1.4}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-size:.76rem;color:rgba(255,255,255,.3)}
+.footer-links{display:flex;gap:18px}
+.footer-links a{font-size:.76rem;color:rgba(255,255,255,.3);text-decoration:none}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* RESPONSIVE sezioni */
+@media(max-width:900px){
+  .drama-box{grid-template-columns:1fr}
+  .drama-col.bad{border-right:none;border-bottom:2px solid var(--orange)}
+  .problem-cards,.testi-grid{grid-template-columns:1fr}
+  .soluzione-inner{grid-template-columns:1fr}
+  .steps-wrap{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr;gap:36px}
+  .cta-buttons{flex-direction:column;align-items:center}
+  .lc-section{padding:60px 5%}
+}
 </style>
 </head>
 <body>
@@ -136,7 +279,7 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 <!-- COLONNA SINISTRA desktop -->
 <div class="desk-left">
   <div class="desk-tag">Partner ufficiale Wind Tre · Vasto (CH)</div>
-  <div class="desk-logo">GIGALIZ<br>ZATI</div>
+  <div class="desk-logo">GIGALIZZATI</div>
   <div class="desk-sub">in <span>3 minuti</span> — Wind Tre Vasto</div>
   <div class="desk-stats">
     <div class="desk-stat"><div class="desk-stat-num">+320</div><div class="desk-stat-label">Clienti soddisfatti quest'anno</div></div>
@@ -244,6 +387,232 @@ body{font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hi
 
 </div><!-- /desk-layout -->
 
+<!-- Mobile spacer: spinge il contenuto sotto il video fisso -->
+<div class="mob-spacer"></div>
+
+<!-- ══════════════════════════════════════════
+     LANDING CONTENT (scorrendo sotto il video)
+     ══════════════════════════════════════════ -->
+<div class="landing-content">
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-track">
+    <span class="proof-item"><span class="dot"></span>Attivazione in 10 minuti</span>
+    <span class="proof-item"><span class="dot"></span>Portabilità senza interruzioni</span>
+    <span class="proof-item"><span class="dot"></span>Consulenza gratuita</span>
+    <span class="proof-item"><span class="dot"></span>Partner ufficiale Wind Tre</span>
+    <span class="proof-item"><span class="dot"></span>Assistenza post-vendita</span>
+    <span class="proof-item"><span class="dot"></span>Nessun costo nascosto</span>
+    <span class="proof-item"><span class="dot"></span>Fibra e 5G a Vasto</span>
+    <span class="proof-item"><span class="dot"></span>Luce &amp; Gas inclusi</span>
+    <span class="proof-item"><span class="dot"></span>Attivazione in 10 minuti</span>
+    <span class="proof-item"><span class="dot"></span>Portabilità senza interruzioni</span>
+    <span class="proof-item"><span class="dot"></span>Consulenza gratuita</span>
+    <span class="proof-item"><span class="dot"></span>Partner ufficiale Wind Tre</span>
+    <span class="proof-item"><span class="dot"></span>Assistenza post-vendita</span>
+    <span class="proof-item"><span class="dot"></span>Nessun costo nascosto</span>
+    <span class="proof-item"><span class="dot"></span>Fibra e 5G a Vasto</span>
+    <span class="proof-item"><span class="dot"></span>Luce &amp; Gas inclusi</span>
+  </div>
+</div>
+
+<!-- PROBLEMA -->
+<section class="lc-section lc-problema">
+  <div style="max-width:1100px;margin:0 auto">
+    <span class="lc-tag reveal">Il problema</span>
+    <h2 class="lc-title reveal">I call center ti costano<br>più di quanto pensi</h2>
+    <p class="lc-sub reveal">Non solo in euro, ma in tempo perso, problemi irrisolti e rinnovi automatici che non hai mai chiesto.</p>
+  </div>
+  <div class="drama-box reveal">
+    <div class="drama-col bad">
+      <div class="drama-label">❌ Con il call center</div>
+      <p class="drama-scenario">Aspetti 20 minuti in attesa, ti passano da un operatore all'altro. Ti vendono un'offerta che sembra conveniente, poi scopri <strong>costi nascosti in bolletta</strong>. Quando hai un problema, richiami, aspetti ancora, e ti dicono che "non possono fare nulla".</p>
+      <div class="drama-highlight">Ore perse.<br>Soldi persi.</div>
+    </div>
+    <div class="drama-col good">
+      <div class="drama-label">✓ Con Andrea a Vasto</div>
+      <p class="drama-scenario">Entri in negozio, spieghi la tua situazione in 5 minuti. Andrea valuta la tua offerta attuale e attiva tutto <strong>direttamente davanti a te</strong>. Se hai un dubbio dopo, torni e lo risolvi in 10 minuti.</p>
+      <div class="drama-highlight">Problema risolto.<br>Subito.</div>
+    </div>
+  </div>
+  <div class="problem-cards">
+    <div class="problem-card reveal reveal-delay-1">
+      <div class="problem-card-num">01</div>
+      <h3>Stai pagando troppo<br>da anni</h3>
+      <p>Il tuo operatore ha aumentato le tariffe silenziosamente. Ti è arrivata una comunicazione che non hai letto, o peggio non ne hai ricevuta nessuna. Intanto paghi 10 euro in più ogni mese senza saperlo.</p>
+      <div class="fact">→ Il rincaro medio non comunicato è di 8-15 euro/mese</div>
+    </div>
+    <div class="problem-card reveal reveal-delay-2">
+      <div class="problem-card-num">02</div>
+      <h3>La portabilità ti spaventa<br>e resti fermo</h3>
+      <p>Hai sentito storie di chi è rimasto senza linea per giorni cambiando operatore. Allora rimandi, aspetti, e intanto continui a pagare un'offerta che non ti soddisfa.</p>
+      <div class="fact">→ La portabilità con Wind Tre avviene in poche ore, in automatico</div>
+    </div>
+    <div class="problem-card reveal reveal-delay-3">
+      <div class="problem-card-num">03</div>
+      <h3>Non sai mai cosa firmi<br>veramente</h3>
+      <p>Il contratto ha 12 pagine di condizioni. Il call center ti legge solo il prezzo promozionale. Poi scopri il costo a regime, i vincoli e i costi di recesso.</p>
+      <div class="fact">→ Da noi ogni voce viene spiegata prima di firmare qualsiasi cosa</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUZIONE -->
+<section class="lc-section lc-soluzione">
+  <div class="soluzione-inner">
+    <div>
+      <span class="lc-tag reveal">La soluzione</span>
+      <h2 class="lc-title reveal">Un negozio vero.<br>Una persona vera.</h2>
+      <p class="lc-sub reveal">Sempre in Rete non è un sito dove clicchi e speri. È un negozio fisico a Vasto dove Andrea ti segue dall'inizio alla fine.</p>
+      <div class="soluzione-features">
+        <div class="feature-row reveal"><div class="feature-num">01</div><div class="feature-content"><h4>Analisi gratuita della tua offerta attuale</h4><p>Porti la tua bolletta o ci dici cosa hai. Andrea controlla se stai pagando il giusto, senza impegno.</p></div></div>
+        <div class="feature-row reveal"><div class="feature-num">02</div><div class="feature-content"><h4>Portabilità senza rischi e senza interruzioni</h4><p>Il numero vecchio non lo perdi. La linea non si interrompe. La portabilità avviene in automatico.</p></div></div>
+        <div class="feature-row reveal"><div class="feature-num">03</div><div class="feature-content"><h4>Tutto chiaro prima di firmare</h4><p>Nessuna sorpresa in bolletta. Ogni voce viene spiegata prima. Se non ti convince, non firmi.</p></div></div>
+        <div class="feature-row reveal"><div class="feature-num">04</div><div class="feature-content"><h4>Assistenza anche dopo l'attivazione</h4><p>Hai un problema con la SIM? Torni da noi o scrivi su WhatsApp. Non rimani mai da solo.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="soluzione-img reveal"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80" alt="Consulenza telefonica Vasto"></div>
+      <div class="value-card reveal">
+        <div class="value-card-title">Cosa ottieni</div>
+        <div class="value-card-sub">Incluso nella consulenza in negozio</div>
+        <ul>
+          <li>Analisi offerta attuale — gratuita e senza impegno</li>
+          <li>Confronto offerte disponibili per il tuo profilo</li>
+          <li>Attivazione SIM in negozio in 10 minuti</li>
+          <li>Portabilità gestita completamente da noi</li>
+          <li>Spiegazione voce per voce del contratto</li>
+          <li>Supporto post-attivazione via WhatsApp o in negozio</li>
+          <li>Consulenza fibra, FWA, Luce &amp; Gas su richiesta</li>
+        </ul>
+        <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" class="btn-primary">👆 Torna su e compila il quiz</a>
+        <div class="guarantee">Nessun impegno. Nessun costo. Solo una chiacchierata.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COME FUNZIONA -->
+<section class="lc-section lc-come-funziona">
+  <div style="max-width:1100px;margin:0 auto">
+    <span class="lc-tag reveal" style="color:rgba(255,255,255,.5)">Come funziona</span>
+    <h2 class="lc-title reveal">3 passi.<br>E sei a posto.</h2>
+    <p class="lc-sub reveal">Niente attese infinite, niente moduli complicati. Dal primo contatto alla SIM attiva in meno di un'ora.</p>
+  </div>
+  <div class="steps-wrap">
+    <div class="step-item reveal">
+      <div class="step-num">01</div>
+      <span class="step-icon">💬</span>
+      <div class="step-title">Scrivimi su WhatsApp<br>o chiamami</div>
+      <p class="step-desc">Mandami un messaggio con la tua situazione attuale: quale operatore hai, quanto paghi, cosa ti serve. Ti rispondo personalmente in pochi minuti.</p>
+    </div>
+    <div class="step-item reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <span class="step-icon">🏪</span>
+      <div class="step-title">Vieni in negozio<br>con un documento</div>
+      <p class="step-desc">In Corso Mazzini 196 a Vasto. Nessun appuntamento obbligatorio. Bastano un documento d'identità e 10 minuti del tuo tempo.</p>
+    </div>
+    <div class="step-item reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <span class="step-icon">✅</span>
+      <div class="step-title">SIM attiva.<br>Sei a posto.</div>
+      <p class="step-desc">Esci dal negozio con la SIM già attiva e il numero portato. Se hai dubbi dopo, mi scrivi su WhatsApp. Non sparisco dopo la vendita.</p>
+      <div style="margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:.95rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orange)">⚡ Sei Gigalizzato.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIANZE -->
+<section class="lc-section lc-testi">
+  <div style="max-width:1100px;margin:0 auto">
+    <span class="lc-tag reveal">Cosa dicono di noi</span>
+    <h2 class="lc-title reveal">Chi è venuto da noi<br>non torna indietro</h2>
+    <p class="lc-sub reveal">Persone reali di Vasto e dintorni che hanno smesso di perdere tempo con i call center.</p>
+  </div>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Pagavo 15 euro in più al mese senza motivo. Andrea ha controllato la mia bolletta in 5 minuti, mi ha fatto passare a un'offerta migliore e non ho perso il numero. Tutto in meno di un quarto d'ora."</p>
+      <div class="testi-author"><div class="testi-avatar">M</div><div><div class="testi-name">Marco R.</div><div class="testi-meta">Vasto · Padre di famiglia · Cliente da 2 anni</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Avevo una paura tremenda di restare senza linea durante la portabilità. Invece non me ne sono neanche accorta: il giorno dopo avevo già Wind Tre attivo con il mio vecchio numero."</p>
+      <div class="testi-author"><div class="testi-avatar">G</div><div><div class="testi-name">Giulia F.</div><div class="testi-meta">San Salvo · Insegnante · Cliente da 1 anno</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Finalmente qualcuno che ti spiega le cose come stanno, senza tecnicismi. Ho attivato 3 SIM per tutta la famiglia. Ogni volta che ho un dubbio passo da lui."</p>
+      <div class="testi-author"><div class="testi-avatar">R</div><div><div class="testi-name">Roberto C.</div><div class="testi-meta">Casalbordino · Artigiano · Cliente da 3 anni</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="lc-section lc-faq">
+  <div style="max-width:1100px;margin:0 auto">
+    <span class="lc-tag reveal">Domande frequenti</span>
+    <h2 class="lc-title reveal">Tutto quello che<br>vuoi sapere</h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Perdo il numero se cambio operatore? <span class="faq-icon">+</span></button><div class="faq-a"><p>No, assolutamente. La portabilità del numero è un diritto garantito dalla legge. Con Wind Tre il processo è automatico e avviene in poche ore, senza che tu debba fare nulla. Esci dal negozio con il tuo vecchio numero già attivo sulla nuova SIM.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Quanto tempo ci vuole per attivare una nuova SIM? <span class="faq-icon">+</span></button><div class="faq-a"><p>In media 10-15 minuti in negozio. Bastano un documento d'identità valido e il codice fiscale. Se devi portare il numero da un altro operatore, la portabilità avviene entro poche ore dalla firma del contratto.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">La consulenza è davvero gratuita? <span class="faq-icon">+</span></button><div class="faq-a"><p>Sì, completamente. Puoi venire in negozio, mostrarci la tua bolletta attuale e chiedere un confronto con le offerte Wind Tre senza nessun impegno. Se non ti convince nessuna soluzione, non firmi nulla e non devi niente.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Fate anche fibra e internet casa? <span class="faq-icon">+</span></button><div class="faq-a"><p>Sì. Gestiamo attivazioni di fibra FTTH (fino a 2.5 Gbps), FWA (internet senza cavo tramite antenna 5G) e linee fisse. Possiamo anche abbinare SIM mobile e fibra con offerte bundle vantaggiose.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Cosa succede se ho un problema dopo l'attivazione? <span class="faq-icon">+</span></button><div class="faq-a"><p>Puoi tornare in negozio o scriverci su WhatsApp al +39 393 123 0333. Andrea segue personalmente tutti i clienti anche dopo la firma. Non sei solo con un numero verde da chiamare.</p></div></div>
+  </div>
+</section>
+
+<!-- CTA FINALE -->
+<section class="lc-section lc-cta" id="contattaci">
+  <div style="position:relative;z-index:2">
+    <h2 class="lc-title">Pronto a smettere<br>di pagare troppo?</h2>
+    <p class="lc-cta-sub">Contatta Andrea oggi. La consulenza è gratuita, l'attivazione dura 10 minuti, e puoi portare il tuo vecchio numero senza nessun rischio.</p>
+    <div class="cta-buttons">
+      <a href="https://wa.me/393931230333" target="_blank" class="btn-wa">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.557 4.125 1.529 5.858L.057 23.944l6.255-1.639A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        Scrivimi su WhatsApp
+      </a>
+      <a href="tel:+393931230333" class="btn-call">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        Chiama ora
+      </a>
+    </div>
+    <div class="cta-reassure">
+      <span class="reassure-item">Risposta entro poche ore</span>
+      <span class="reassure-item">Consulenza gratuita</span>
+      <span class="reassure-item">Nessuna pressione</span>
+      <span class="reassure-item">Negozio fisico a Vasto</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="lc-footer">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">Sempre in <span>Rete</span></div>
+      <p class="footer-payoff">Partner ufficiale Wind Tre a Vasto. SIM, fibra, luce &amp; gas. Andrea risponde personalmente a ogni richiesta.</p>
+    </div>
+    <div class="footer-info">
+      <h4>Informazioni</h4>
+      <ul>
+        <li>📍 Corso Mazzini, 196 — 66054 Vasto (CH)</li>
+        <li>📞 +39 393 123 0333</li>
+        <li>💬 WhatsApp: +39 393 123 0333</li>
+        <li>🕐 Lun–Sab 9:30–13:00 / 16:30–20:00</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Sempre in Rete di Andrea Di Domenico. Tutti i diritti riservati.</div>
+    <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Cookie Policy</a></div>
+  </div>
+</footer>
+
+</div><!-- /landing-content -->
+
 <script>
 var SHEET_WEBHOOK_URL='https://script.google.com/macros/s/AKfycbw5f3e3Vnk2IoUbrb9at4yh_wWlAGmj4VACIMqAzo5ijl_utBp7mMlgEItNNSPPeHOF4Q/exec';
 var isDesktop=window.innerWidth>=900;
@@ -274,6 +643,18 @@ function vaGetOffer(){if(vaS.a.V3==='biz')return VA_OFFERS.biz;if(vaS.a.V2a==='f
 function vaShowResult(isBiz){if(vaS._resultShown)return;vaS._resultShown=true;var offer=vaGetOffer(),g='Perfetto <strong style="color:#fff">'+vaS.nome+'</strong>! In base a quello che ci hai detto:';if(isDesktop){document.getElementById('vaResultGreetingD').innerHTML=g;document.getElementById('vaResultOfferD').textContent=offer.name;document.getElementById('vaResultDescD').textContent=offer.desc;document.getElementById('vaResultD').style.display='flex';var dt=document.getElementById('deskTestis');if(dt)dt.style.display='none';}else{document.getElementById('vaResultGreeting').innerHTML=g;document.getElementById('vaResultOffer').textContent=offer.name;document.getElementById('vaResultDesc').textContent=offer.desc;document.getElementById('vaResult').style.display='flex';}vaSendToCRM(offer,isBiz);}
 function vaSendToCRM(offer,isBiz){if(!SHEET_WEBHOOK_URL||SHEET_WEBHOOK_URL.indexOf('http')<0)return;var v0c=vaS.a.V0c?VA_FLOW.V0c.btns.find(function(b){return b.v===vaS.a.V0c;}):null,v0d=vaS.a.V0d?VA_FLOW.V0d.btns.find(function(b){return b.v===vaS.a.V0d;}):null,v1=vaS.a.V1?VA_FLOW.V1.btns.find(function(b){return b.v===vaS.a.V1;}):null,v2k=vaS.a.V2a?'V2a':(vaS.a.V2b?'V2b':null),v2=v2k?VA_FLOW[v2k].btns.find(function(b){return b.v===vaS.a[v2k];}):null;fetch(SHEET_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({nome:vaS.nome,telefono:vaS.phone,zona:vaS.zona,operatore:v0c?v0c.lbl:'',costoAttuale:v0d?v0d.lbl:'',utilizzo:v1?v1.lbl:'',connessione:v2?v2.lbl:'',sim:vaS.a.V3||'',lucegas:vaS.lgInt?'Sì':'No',tipo:isBiz?'Business':'Privato',offertaConsigliata:offer.name,fonte:'Landing VideoAsk',timestamp:new Date().toISOString()})}).catch(function(){});}
 function vaReset(){vaS={step:'V0',nome:'',phone:'',zona:'',a:{},lgInt:false,history:[],_resultShown:false};vaIsPaused=false;if(vaProgressInt){clearInterval(vaProgressInt);vaProgressInt=null;}['vaBtns','vaForm','vaResult','vaBtnsD','vaFormD','vaResultD'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});document.getElementById('vaBackBtn').style.display='none';document.getElementById('vaPauseBtn').style.display='none';document.getElementById('vaMuteOverlay').style.display='none';document.getElementById('vaPausedOverlay').style.display='none';document.getElementById('vaProgressBar').style.width='0%';['vaName','vaPhone','vaNameD','vaPhoneD'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});['vaZona','vaZonaD'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});['vaZonaAltro','vaZonaAltroD'].forEach(function(id){var el=document.getElementById(id);if(el){el.value='';el.style.display='none';}});vaCheckForm();vaCheckFormD();var dt=document.getElementById('deskTestis');if(dt)dt.style.display='';if(vaVid){try{vaVid.pause();vaVid.currentTime=0;vaVid.muted=true;}catch(e){}}document.getElementById('vaPlayScreen').style.display='flex';}
+
+// Reveal on scroll
+var revealObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){revealObs.observe(el);});
+
+// FAQ
+function toggleFaq(btn){
+  var allBtns=document.querySelectorAll('.faq-q'),allAnswers=document.querySelectorAll('.faq-a');
+  allBtns.forEach(function(b,i){if(b!==btn){b.classList.remove('open');allAnswers[i].classList.remove('open');}});
+  var idx=Array.prototype.indexOf.call(allBtns,btn);
+  btn.classList.toggle('open');allAnswers[idx].classList.toggle('open');
+}
 </script>
 </body>
 </html>
