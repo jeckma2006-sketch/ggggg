@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sempre in Rete — Trova la tua offerta</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Barlow',sans-serif;background:#0d0d0d;color:#fff;overflow-x:hidden}
+
+:root{
+  --orange:#E8541E;
+  --orange-dark:#C43D0A;
+}
+
+/* ── LAYOUT ── */
+.va-page{
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:16px 16px 32px;
+}
+
+/* ── VIDEO CARD ── */
+.va-card{
+  width:100%;
+  max-width:400px;
+  position:relative;
+}
+
+/* Cornice arancione pulsante */
+.va-frame{
+  border-radius:20px;
+  border:2.5px solid var(--orange);
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(232,84,30,.5), 0 20px 60px rgba(0,0,0,.6);
+  animation:frame-glow 1.6s ease-in-out infinite;
+  position:relative;
+  background:#000;
+  aspect-ratio:9/16;
+}
+@keyframes frame-glow{
+  0%,100%{box-shadow:0 0 40px rgba(232,84,30,.5),0 20px 60px rgba(0,0,0,.6)}
+  50%{box-shadow:0 0 70px rgba(232,84,30,.95),0 20px 60px rgba(0,0,0,.6)}
+}
+
+/* Video element */
+#vaVideo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#000;
+  display:block;
+}
+
+/* ── PLAY SCREEN ── */
+#vaPlayScreen{
+  position:absolute;
+  inset:0;
+  background:#0d0d0d;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  padding:28px 20px;
+  text-align:center;
+  z-index:20;
+}
+.ps-avatar{
+  width:80px;height:80px;
+  border-radius:50%;
+  border:2.5px solid var(--orange);
+  box-shadow:0 0 20px rgba(232,84,30,.4);
+  overflow:hidden;
+  margin-bottom:16px;
+  flex-shrink:0;
+}
+.ps-avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
+.ps-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:.95rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:6px;
+}
+.ps-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:1.4rem;
+  text-transform:uppercase;color:#fff;
+  line-height:1.1;margin-bottom:8px;
+}
+.ps-sub{
+  font-size:.8rem;color:rgba(255,255,255,.45);
+  line-height:1.5;margin-bottom:24px;max-width:200px;
+}
+.ps-play-btn{
+  width:68px;height:68px;border-radius:50%;
+  background:var(--orange);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 28px rgba(232,84,30,.55);
+  transition:transform .2s,box-shadow .2s;
+  margin-bottom:14px;flex-shrink:0;
+}
+.ps-play-btn:active{transform:scale(.95)}
+.ps-hint{font-size:.72rem;color:rgba(255,255,255,.3);letter-spacing:.04em}
+
+/* ── MUTE OVERLAY ── */
+#vaMuteOverlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.5);
+  border:none;cursor:pointer;
+  display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  z-index:18;
+}
+#vaMuteOverlay span{
+  color:#fff;font-size:.82rem;font-weight:700;
+}
+
+/* ── PAUSE OVERLAY ── */
+#vaPausedOverlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  align-items:center;justify-content:center;
+  pointer-events:none;z-index:9;
+}
+
+/* ── TOP HUD ── */
+#vaHud{
+  position:absolute;top:12px;left:12px;right:12px;
+  display:flex;align-items:center;justify-content:space-between;
+  z-index:15;pointer-events:none;
+}
+#vaStepLabel{
+  background:rgba(0,0,0,.7);color:rgba(255,255,255,.8);
+  font-size:.62rem;font-weight:700;padding:4px 10px;
+  border-radius:5px;letter-spacing:.1em;text-transform:uppercase;
+}
+#vaBackBtn{
+  background:rgba(0,0,0,.8);border:none;color:#fff;
+  font-size:.75rem;font-weight:600;padding:5px 11px;
+  border-radius:5px;cursor:pointer;pointer-events:auto;
+  display:none;font-family:'Barlow',sans-serif;
+}
+#vaPauseBtn{
+  position:absolute;bottom:12px;left:12px;
+  background:rgba(0,0,0,.7);border:1.5px solid rgba(255,255,255,.2);
+  border-radius:50%;width:36px;height:36px;
+  cursor:pointer;display:none;align-items:center;justify-content:center;
+  z-index:15;transition:background .2s;
+}
+#vaPauseBtn:active{background:rgba(232,84,30,.8)}
+
+/* ── BOTTOM PANEL (buttons / form / result) ── */
+.va-panel{
+  width:100%;
+  max-width:400px;
+  margin-top:14px;
+}
+
+#vaBtns{display:none;flex-direction:column;gap:10px}
+#vaBtns .va-q-title{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:1.15rem;text-transform:uppercase;color:#fff;
+  margin-bottom:2px;letter-spacing:.02em;
+}
+#vaBtns .va-q-sub{
+  font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:10px;
+}
+.va-btn{
+  background:rgba(255,255,255,.05);
+  border:2px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:14px 16px;
+  color:#fff;font-size:.95rem;font-weight:600;
+  font-family:'Barlow',sans-serif;cursor:pointer;
+  text-align:left;transition:border-color .2s,background .2s;
+  display:flex;align-items:center;gap:12px;
+}
+.va-btn:active{border-color:var(--orange);background:rgba(232,84,30,.12)}
+.va-btn-num{
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(232,84,30,.2);border:1.5px solid rgba(232,84,30,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:900;color:var(--orange);flex-shrink:0;
+}
+
+/* ── FORM ── */
+#vaForm{display:none;flex-direction:column;gap:12px}
+.va-form-title{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:1.2rem;text-transform:uppercase;color:#fff;
+  margin-bottom:2px;
+}
+.va-form-sub{font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:4px}
+.va-input{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.14);
+  border-radius:10px;padding:13px 15px;
+  color:#fff;font-size:.95rem;font-family:'Barlow',sans-serif;
+  outline:none;transition:border-color .2s;width:100%;
+}
+.va-input:focus{border-color:var(--orange)}
+.va-select{
+  background:rgba(255,255,255,.07);
+  border:1.5px solid rgba(255,255,255,.14);
+  border-radius:10px;padding:13px 15px;
+  color:#fff;font-size:.95rem;font-family:'Barlow',sans-serif;
+  outline:none;transition:border-color .2s;width:100%;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ffffff60' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+.va-select:focus{border-color:var(--orange)}
+.va-select option{background:#1a1a1a}
+.va-submit-btn{
+  background:rgba(232,84,30,.25);color:rgba(255,255,255,.35);
+  border:none;padding:15px;border-radius:10px;
+  font-size:.98rem;font-weight:700;font-family:'Barlow',sans-serif;
+  cursor:not-allowed;transition:all .2s;
+}
+
+/* ── RESULT ── */
+#vaResult{display:none;flex-direction:column;align-items:center;text-align:center;gap:0}
+.va-result-icon{font-size:2rem;margin-bottom:10px}
+.va-result-greeting{font-size:.92rem;color:rgba(255,255,255,.7);margin-bottom:6px;line-height:1.5}
+.va-result-offer{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:1.9rem;text-transform:uppercase;color:var(--orange);
+  line-height:1;margin-bottom:6px;
+}
+.va-result-desc{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:18px}
+.va-andrea-row{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.04);border-radius:10px;
+  padding:12px 14px;margin-bottom:16px;
+  border:1px solid rgba(255,255,255,.08);text-align:left;width:100%;
+}
+.va-andrea-row img{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid var(--orange);flex-shrink:0}
+.va-wa-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:#25D366;color:#fff;text-decoration:none;
+  font-weight:700;font-size:.98rem;padding:16px;border-radius:10px;
+  box-shadow:0 5px 20px rgba(37,211,102,.3);transition:background .2s;
+  margin-bottom:8px;width:100%;
+}
+.va-wa-btn:active{background:#1ea655}
+.va-call-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:rgba(255,255,255,.07);color:#fff;text-decoration:none;
+  font-weight:600;font-size:.88rem;padding:13px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);transition:background .2s;
+  margin-bottom:14px;width:100%;
+}
+.va-reset-btn{
+  background:none;border:none;color:rgba(255,255,255,.2);
+  font-size:.75rem;cursor:pointer;text-decoration:underline;
+  font-family:'Barlow',sans-serif;
+}
+
+/* ── PROGRESS BAR ── */
+#vaProgress{
+  position:absolute;bottom:0;left:0;right:0;
+  height:3px;background:rgba(255,255,255,.1);z-index:16;
+}
+#vaProgressBar{
+  height:100%;background:var(--orange);width:0%;
+  transition:width .15s linear;
+}
+
+/* ── DESKTOP: affianca video e panel ── */
+@media(min-width:600px){
+  .va-page{
+    flex-direction:row;
+    align-items:flex-start;
+    justify-content:center;
+    gap:24px;
+    padding:24px 24px 48px;
+    min-height:100dvh;
+  }
+  .va-card{max-width:360px}
+  .va-panel{margin-top:0;max-width:340px;align-self:center}
+}
+
+@keyframes va-spin{to{transform:rotate(360deg)}}
+@keyframes va-pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="va-page">
+
+  <!-- VIDEO CARD -->
+  <div class="va-card">
+    <div class="va-frame" id="vaFrame">
+
+      <video id="vaVideo"
+        src="https://res.cloudinary.com/dzvhd4tp3/video/upload/v1778755774/andrea_by5e8x.mp4"
+        muted autoplay playsinline webkit-playsinline
+        preload="auto" disablepictureinpicture disableremoteplayback>
+      </video>
+
+      <!-- PLAY SCREEN -->
+      <div id="vaPlayScreen">
+        <div class="ps-avatar">
+          <img src="https://i.imgur.com/e81fwRr.jpeg" alt="Andrea">
+        </div>
+        <div class="ps-name">Ciao! Sono Andrea</div>
+        <div class="ps-title">Troviamo l'offerta<br>giusta in 3 minuti</div>
+        <div class="ps-sub">Guarda i miei video e rispondi con un tap. Ti dico io cosa fa per te.</div>
+        <button class="ps-play-btn" onclick="vaStartPlayer()">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="ps-hint">Tocca per iniziare &bull; Audio attivo</div>
+      </div>
+
+      <!-- MUTE OVERLAY -->
+      <button id="vaMuteOverlay" onclick="vaUnmute()">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="white" style="opacity:.9"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        <span>Tocca per attivare il suono</span>
+      </button>
+
+      <!-- PAUSED OVERLAY -->
+      <div id="vaPausedOverlay" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.4);align-items:center;justify-content:center;pointer-events:none;z-index:9">
+        <div style="width:60px;height:60px;border-radius:50%;background:rgba(232,84,30,.9);display:flex;align-items:center;justify-content:center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+
+      <!-- CLICK TO PAUSE -->
+      <div style="position:absolute;top:0;left:0;right:0;bottom:40%;z-index:8;cursor:pointer" onclick="vaTogglePlay()"></div>
+
+      <!-- HUD -->
+      <div id="vaHud">
+        <button id="vaBackBtn" onclick="vaBack()">&#8592; Indietro</button>
+        <div id="vaStepLabel"></div>
+      </div>
+      <button id="vaPauseBtn" onclick="vaTogglePlay()">
+        <svg id="vaPauseIcon" width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+
+      <!-- PROGRESS BAR -->
+      <div id="vaProgress"><div id="vaProgressBar"></div></div>
+
+    </div><!-- /va-frame -->
+  </div><!-- /va-card -->
+
+  <!-- BOTTOM / SIDE PANEL -->
+  <div class="va-panel">
+
+    <!-- BOTTONI -->
+    <div id="vaBtns"></div>
+
+    <!-- FORM -->
+    <div id="vaForm">
+      <div class="va-form-title">Prima di continuare&hellip;</div>
+      <div class="va-form-sub">Così Andrea sa già chi sei quando ti risponde.</div>
+      <input id="vaName" class="va-input" type="text" placeholder="Il tuo nome..." maxlength="40" autocomplete="given-name" oninput="vaCheckForm()">
+      <input id="vaPhone" class="va-input" type="tel" placeholder="Il tuo numero di telefono..." maxlength="15" autocomplete="tel" oninput="vaCheckForm()">
+      <select id="vaZona" class="va-select" onchange="vaOnZonaChange()">
+        <option value="">Dove sei?</option>
+        <option value="Vasto">Vasto</option>
+        <option value="San Salvo">San Salvo</option>
+        <option value="Cupello">Cupello</option>
+        <option value="Casalbordino">Casalbordino</option>
+        <option value="Lanciano">Lanciano</option>
+        <option value="Vasto Marina">Vasto Marina</option>
+        <option value="__altro">Altro&hellip;</option>
+      </select>
+      <input id="vaZonaAltro" class="va-input" type="text" placeholder="Indica la tua zona..." maxlength="40" oninput="vaCheckForm()" style="display:none">
+      <button id="vaFormBtn" class="va-submit-btn" onclick="vaSubmitForm()" disabled>Avanti &rarr;</button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="vaResult">
+      <div class="va-result-icon" style="animation:va-pop .5s ease">&#9889;</div>
+      <div id="vaResultGreeting" class="va-result-greeting"></div>
+      <div id="vaResultOffer" class="va-result-offer"></div>
+      <div id="vaResultDesc" class="va-result-desc"></div>
+      <div class="va-andrea-row">
+        <img src="https://i.imgur.com/e81fwRr.jpeg" alt="Andrea">
+        <div>
+          <div style="font-weight:700;font-size:.85rem;color:#fff;margin-bottom:2px">Andrea ti contatterà presto &#128075;</div>
+          <div style="font-size:.74rem;color:rgba(255,255,255,.45)">Ha già le tue risposte — ti scrive su WhatsApp.</div>
+        </div>
+      </div>
+      <a id="vaWaBtn" href="https://wa.me/393931230333" target="_blank" class="va-wa-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.557 4.125 1.529 5.858L.057 23.944l6.255-1.639A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        Scrivimi su WhatsApp
+      </a>
+      <a href="tel:+393931230333" class="va-call-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        Oppure chiama ora
+      </a>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,84,30,.5);margin-bottom:10px">&#9889; Sei Gigalizzato.</div>
+      <button class="va-reset-btn" onclick="vaReset()">&#8617; Ricomincia</button>
+    </div>
+
+  </div><!-- /va-panel -->
+
+</div><!-- /va-page -->
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+var SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw5f3e3Vnk2IoUbrb9at4yh_wWlAGmj4VACIMqAzo5ijl_utBp7mMlgEItNNSPPeHOF4Q/exec';
+
+var VA_CLIPS = {
+  V0:  { start:   0.000, duration: 15.933 },
+  V0b: { start:  15.933, duration: 11.833 },
+  V1:  { start:  27.766, duration: 12.367 },
+  V2a: { start:  40.133, duration: 15.800 },
+  V2b: { start:  55.933, duration: 16.600 },
+  V3:  { start:  72.533, duration: 10.333 },
+  V4:  { start:  82.866, duration: 16.933 },
+  V5:  { start:  99.799, duration: 19.967 },
+  V5b: { start: 119.766, duration: 16.400 }
+};
+
+var VA_FLOW = {
+  V0:  { label:'Benvenuto', btns:[{text:'Inizia →', next:'V0b', v:'', lbl:''}] },
+  V0b: { label:'Chi sei?', form:true },
+  V0c: { label:'1 di 6', noVideo:true, question:'Da quale operatore vieni?', btns:[
+    {text:'TIM',                   next:'V0d', v:'TIM',         lbl:'TIM'},
+    {text:'Vodafone',              next:'V0d', v:'Vodafone',    lbl:'Vodafone'},
+    {text:'Iliad',                 next:'V0d', v:'Iliad',       lbl:'Iliad'},
+    {text:'Fastweb',               next:'V0d', v:'Fastweb',     lbl:'Fastweb'},
+    {text:'PosteMobile',           next:'V0d', v:'PosteMobile', lbl:'PosteMobile'},
+    {text:'ho. Mobile',            next:'V0d', v:'ho.',         lbl:'ho. Mobile'},
+    {text:'Altro / non ricordo',   next:'V0d', v:'Altro',       lbl:'Altro / non ricordo'}
+  ]},
+  V0d: { label:'2 di 6', noVideo:true, question:'Quanto paghi adesso al mese?', btns:[
+    {text:'Meno di 10€',           next:'V1', v:'<10',   lbl:'meno di 10€/mese'},
+    {text:'Tra 10€ e 15€',         next:'V1', v:'10-15', lbl:'10-15€/mese'},
+    {text:'Tra 15€ e 25€',         next:'V1', v:'15-25', lbl:'15-25€/mese'},
+    {text:'Tra 25€ e 40€',         next:'V1', v:'25-40', lbl:'25-40€/mese'},
+    {text:'Più di 40€',            next:'V1', v:'>40',   lbl:'oltre 40€/mese'},
+    {text:'Non lo so / non ricordo',next:'V1', v:'?',    lbl:'non sa quanto paga'}
+  ]},
+  V1:  { label:'3 di 6', btns:[
+    {text:'Pochi GB — solo WhatsApp e foto',      next:'V2a', v:'low',       lbl:'pochi GB'},
+    {text:'Uso normale — social, musica, mappe',  next:'V2a', v:'med',       lbl:'uso normale'},
+    {text:'Tanto — video, streaming, lavoro',     next:'V2b', v:'high',      lbl:'tanto'},
+    {text:'Voglio illimitato — niente limiti',    next:'V2b', v:'unlimited', lbl:'giga illimitati'}
+  ]},
+  V2a: { label:'4 di 6', btns:[
+    {text:'Solo SIM — il WiFi ce l\'ho',          next:'V3', v:'no',    lbl:'solo SIM'},
+    {text:'Voglio anche la fibra a casa',          next:'V3', v:'fibra', lbl:'fibra a casa'},
+    {text:'Internet casa senza cavo (FWA/5G)',     next:'V3', v:'fwa',   lbl:'FWA/5G'}
+  ]},
+  V2b: { label:'4 di 6', btns:[
+    {text:'Solo SIM — il WiFi ce l\'ho',          next:'V3', v:'no',    lbl:'solo SIM'},
+    {text:'Voglio anche la fibra a casa',          next:'V3', v:'fibra', lbl:'fibra a casa'},
+    {text:'Internet casa senza cavo (FWA/5G)',     next:'V3', v:'fwa',   lbl:'FWA/5G'}
+  ]},
+  V3:  { label:'5 di 6', btns:[
+    {text:'Solo per me',                           next:'V4',  v:'1',      lbl:'una SIM'},
+    {text:'Io + famiglia (2 o più SIM)',           next:'V4',  v:'family', lbl:'famiglia'},
+    {text:'Ho una partita IVA / azienda',          next:'V5b', v:'biz',    lbl:'business'}
+  ]},
+  V4:  { label:'6 di 6', btns:[
+    {text:'⚡ Sì, mi interessa anche luce e gas', next:'V5', v:'lg_yes', lbl:'luce e gas'},
+    {text:'Per ora solo il telefono',              next:'V5', v:'lg_no',  lbl:'solo telefono'}
+  ]},
+  V5:  { label:'Quasi finito!', result:true, biz:false },
+  V5b: { label:'Quasi finito!', result:true, biz:true  }
+};
+
+var VA_OFFERS = {
+  low:      {name:'Easy GO',              desc:'Minuti illimitati + GB per uso leggero. Qualità Wind Tre senza spendere troppo.'},
+  med:      {name:'GO 100 Special',       desc:'100 GB in 4G/5G con minuti illimitati. Il giusto equilibrio per uso quotidiano.'},
+  high:     {name:'GO 150 Fire+',         desc:'150 GB in 5G, minuti illimitati, Amazon Prime 12 mesi incluso.'},
+  unlimited:{name:'GO Unlimited Star+',   desc:'Giga illimitati in 5G. Zero limiti, massima libertà.'},
+  fibra:    {name:'Super Fibra + SIM',    desc:'Fibra FTTH fino a 2.5 Gbps a casa + SIM mobile inclusa. Tutto Wind Tre.'},
+  fwa:      {name:'Super Internet Casa 5G',desc:'Internet veloce a casa senza cavo tramite antenna 5G.'},
+  idk:      {name:'Consiglio Personalizzato',desc:'Andrea valuta la tua situazione e ti consiglia l\'offerta migliore.'},
+  biz:      {name:'Business Wind Tre',    desc:'Offerte dedicate alle aziende. Andrea ti contatta per trovare la soluzione migliore.'}
+};
+
+// ── STATO ───────────────────────────────────────────────────────────────────
+var vaS = {step:'V0',nome:'',phone:'',zona:'',operatore:'',costo:'',a:{},lgInt:false,history:[],_resultShown:false};
+var vaIsPaused = false;
+var vaProgressInt = null;
+var vaVid = null;
+var vaPlayerReady = false;
+var vaPendingLoad = null;
+
+// ── INIT VIDEO ───────────────────────────────────────────────────────────────
+(function(){
+  vaVid = document.getElementById('vaVideo');
+  if (!vaVid) return;
+
+  function markReady(){
+    if (vaPlayerReady) return;
+    vaPlayerReady = true;
+    if (vaPendingLoad){
+      var p = vaPendingLoad; vaPendingLoad = null;
+      vaPlayerLoadVideo(p.key, p.autoplay);
+    }
+  }
+  vaVid.addEventListener('loadedmetadata', markReady, {once:true});
+  vaVid.addEventListener('canplay', markReady, {once:true});
+  if (vaVid.readyState >= 1) markReady();
+
+  vaVid.muted = true;
+  try { vaVid.play().catch(function(){}); } catch(e) {}
+})();
+
+// ── PLAYER ──────────────────────────────────────────────────────────────────
+function vaPlayerLoadVideo(key, autoplay){
+  var clip = VA_CLIPS[key];
+  if (!clip || !vaVid) return;
+  if (!vaPlayerReady){ vaPendingLoad = {key:key, autoplay:autoplay}; return; }
+
+  var seek = Math.max(0, clip.start - 0.2);
+  try {
+    if (autoplay){
+      var p = vaVid.play();
+      if (p && typeof p.then === 'function'){
+        p.then(function(){ try { vaVid.currentTime = seek; } catch(e){} })
+         .catch(function(){ try { vaVid.currentTime = seek; } catch(e){} });
+      } else {
+        vaVid.currentTime = seek;
+      }
+    } else {
+      vaVid.currentTime = seek;
+    }
+  } catch(e) {}
+}
+
+function vaStartPlayer(){
+  // iOS: play() SUBITO nel gesto utente
+  if (vaVid){ vaVid.muted = true; try { vaVid.play().catch(function(){}); } catch(e){} }
+  document.getElementById('vaPlayScreen').style.display = 'none';
+  vaIsPaused = false;
+  document.getElementById('vaMuteOverlay').style.display = 'flex';
+  vaLoad('V0', false);
+  document.getElementById('vaPauseBtn').style.display = 'flex';
+}
+
+function vaTogglePlay(){
+  if (document.getElementById('vaPlayScreen').style.display !== 'none') return;
+  if (vaS._currentStep && vaS._currentStep.noVideo) return;
+  if (vaIsPaused){
+    vaVid && vaVid.play().catch(function(){});
+    vaIsPaused = false;
+    document.getElementById('vaPausedOverlay').style.display = 'none';
+    document.getElementById('vaPauseIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    vaStartProgress(vaS._currentKey);
+  } else {
+    vaVid && vaVid.pause();
+    vaIsPaused = true;
+    document.getElementById('vaPausedOverlay').style.display = 'flex';
+    document.getElementById('vaPauseIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+    if (vaProgressInt){ clearInterval(vaProgressInt); vaProgressInt = null; }
+  }
+}
+
+function vaUnmute(){
+  document.getElementById('vaMuteOverlay').style.display = 'none';
+  if (vaVid){ vaVid.muted = false; vaVid.volume = 1; vaVid.play().catch(function(){}); }
+}
+
+// ── LOAD STEP ────────────────────────────────────────────────────────────────
+function vaLoad(key, skipVideoLoad){
+  var step = VA_FLOW[key];
+  if (!step) return;
+  vaS.step = key;
+  vaS._currentKey = key;
+  vaS._currentStep = step;
+
+  document.getElementById('vaBtns').style.display = 'none';
+  document.getElementById('vaForm').style.display = 'none';
+  document.getElementById('vaResult').style.display = 'none';
+  document.getElementById('vaStepLabel').textContent = step.label;
+  document.getElementById('vaBackBtn').style.display = vaS.history.length > 0 ? 'block' : 'none';
+  document.getElementById('vaPauseBtn').style.display = (step.result || step.noVideo) ? 'none' : 'flex';
+  vaIsPaused = false;
+  document.getElementById('vaPausedOverlay').style.display = 'none';
+  document.getElementById('vaPauseIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  document.getElementById('vaProgressBar').style.width = '0%';
+
+  if (!skipVideoLoad && VA_CLIPS[key] && !step.noVideo){
+    vaPlayerLoadVideo(key, true);
+  }
+
+  if (key === 'V0'){ return; }
+
+  if (step.result){
+    vaShowResult(step.biz);
+    return;
+  }
+  if (step.noVideo){
+    vaVid && vaVid.pause();
+    if (step.form) document.getElementById('vaForm').style.display = 'flex';
+    else if (step.btns) vaShowBtns(step);
+    return;
+  }
+
+  vaStartProgress(key);
+}
+
+// ── PROGRESS ─────────────────────────────────────────────────────────────────
+function vaStartProgress(key){
+  if (vaProgressInt){ clearInterval(vaProgressInt); vaProgressInt = null; }
+  var clip = VA_CLIPS[key];
+  if (!clip) return;
+
+  var buttonsAt = clip.start + clip.duration - 0.5;
+  var pauseAt   = clip.start + clip.duration;
+  var fbStart   = Date.now();
+  var fired = {buttons:false, pause:false};
+
+  vaProgressInt = setInterval(function(){
+    if (vaIsPaused){ fbStart += 150; return; }
+    var t = null;
+    try { if (vaVid) t = vaVid.currentTime; } catch(e){}
+
+    var hitButtons, hitPause;
+    if (typeof t === 'number' && !isNaN(t) && t > 0){
+      hitButtons = t >= buttonsAt;
+      hitPause   = t >= pauseAt;
+      // Progress bar
+      var pct = Math.min(100, ((t - clip.start) / clip.duration) * 100);
+      document.getElementById('vaProgressBar').style.width = Math.max(0,pct) + '%';
+    } else {
+      var el = Date.now() - fbStart;
+      hitButtons = el >= (clip.duration - 0.5) * 1000;
+      hitPause   = el >= clip.duration * 1000;
+      document.getElementById('vaProgressBar').style.width = Math.min(100, el / clip.duration / 10) + '%';
+    }
+
+    if (!fired.buttons && hitButtons){ fired.buttons = true; vaOnEnded(); }
+    if (!fired.pause   && hitPause  ){
+      fired.pause = true;
+      vaVid && vaVid.pause();
+      clearInterval(vaProgressInt); vaProgressInt = null;
+    }
+  }, 150);
+}
+
+// ── BUTTONS ──────────────────────────────────────────────────────────────────
+function vaShowBtns(step){
+  var btns = document.getElementById('vaBtns');
+  btns.style.display = 'flex';
+  var q = step.question || 'Scegli la tua risposta';
+  btns.innerHTML =
+    '<div class="va-q-title">' + q + '</div>' +
+    '<div class="va-q-sub">Tap su una risposta per continuare →</div>' +
+    step.btns.map(function(b,i){
+      return '<button class="va-btn" onclick="vaPick(' + i + ')">' +
+        '<span class="va-btn-num">' + (i+1) + '</span>' + b.text + '</button>';
+    }).join('');
+}
+
+function vaOnEnded(){
+  var step = vaS._currentStep;
+  if (!step) return;
+  if (step.result)      vaShowResult(step.biz);
+  else if (step.form)   document.getElementById('vaForm').style.display = 'flex';
+  else if (step.btns)   vaShowBtns(step);
+}
+
+function vaPick(i){
+  var step = VA_FLOW[vaS.step];
+  var btn  = step.btns[i];
+  vaS.a[vaS.step] = btn.v;
+  if (vaS.step === 'V0c') vaS.operatore = btn.v;
+  if (vaS.step === 'V0d') vaS.costo     = btn.v;
+  if (btn.v === 'lg_yes') vaS.lgInt     = true;
+  vaS.history.push(vaS.step);
+  vaLoad(btn.next);
+}
+
+function vaBack(){
+  if (!vaS.history.length) return;
+  var prev = vaS.history.pop();
+  delete vaS.a[vaS.step];
+  vaLoad(prev);
+}
+
+// ── FORM ─────────────────────────────────────────────────────────────────────
+function vaOnZonaChange(){
+  var sel   = document.getElementById('vaZona');
+  var altro = document.getElementById('vaZonaAltro');
+  altro.style.display = sel.value === '__altro' ? 'block' : 'none';
+  if (sel.value !== '__altro') altro.value = '';
+  vaCheckForm();
+}
+
+function vaCheckForm(){
+  var n = document.getElementById('vaName').value.trim();
+  var p = document.getElementById('vaPhone').value.trim();
+  var z = document.getElementById('vaZona').value;
+  var za= document.getElementById('vaZonaAltro').value.trim();
+  var ok = n.length > 1 && p.length > 6 && z && (z !== '__altro' || za.length > 1);
+  var btn = document.getElementById('vaFormBtn');
+  btn.disabled   = !ok;
+  btn.style.background = ok ? 'var(--orange)' : 'rgba(232,84,30,.25)';
+  btn.style.color      = ok ? '#fff' : 'rgba(255,255,255,.35)';
+  btn.style.cursor     = ok ? 'pointer' : 'not-allowed';
+}
+
+function vaSubmitForm(){
+  vaS.nome  = document.getElementById('vaName').value.trim();
+  vaS.phone = document.getElementById('vaPhone').value.trim();
+  var z     = document.getElementById('vaZona').value;
+  vaS.zona  = z === '__altro' ? document.getElementById('vaZonaAltro').value.trim() : z;
+  document.getElementById('vaForm').style.display = 'none';
+  vaS.history.push('V0b');
+  vaLoad('V0c');
+}
+
+// ── RESULT ───────────────────────────────────────────────────────────────────
+function vaGetOffer(){
+  if (vaS.a.V3 === 'biz')                             return VA_OFFERS.biz;
+  if (vaS.a.V2a === 'fibra' || vaS.a.V2b === 'fibra') return VA_OFFERS.fibra;
+  if (vaS.a.V2a === 'fwa'   || vaS.a.V2b === 'fwa')   return VA_OFFERS.fwa;
+  return VA_OFFERS[vaS.a.V1] || VA_OFFERS.med;
+}
+
+function vaShowResult(isBiz){
+  if (vaS._resultShown) return;
+  vaS._resultShown = true;
+  var offer = vaGetOffer();
+  document.getElementById('vaResultGreeting').innerHTML =
+    'Perfetto <strong style="color:#fff">' + vaS.nome + '</strong>! In base a quello che ci hai detto:';
+  document.getElementById('vaResultOffer').textContent = offer.name;
+  document.getElementById('vaResultDesc').textContent  = offer.desc;
+  document.getElementById('vaResult').style.display = 'flex';
+  vaSendToCRM(offer, isBiz);
+}
+
+function vaSendToCRM(offer, isBiz){
+  if (!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.indexOf('http') < 0) return;
+  var v0cBtn = vaS.a.V0c ? VA_FLOW.V0c.btns.find(function(b){ return b.v === vaS.a.V0c; }) : null;
+  var v0dBtn = vaS.a.V0d ? VA_FLOW.V0d.btns.find(function(b){ return b.v === vaS.a.V0d; }) : null;
+  var v1btn  = vaS.a.V1  ? VA_FLOW.V1.btns.find(function(b){ return b.v === vaS.a.V1; })  : null;
+  var v2k    = vaS.a.V2a ? 'V2a' : (vaS.a.V2b ? 'V2b' : null);
+  var v2btn  = v2k ? VA_FLOW[v2k].btns.find(function(b){ return b.v === vaS.a[v2k]; }) : null;
+  fetch(SHEET_WEBHOOK_URL, {
+    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({
+      nome:vaS.nome, telefono:vaS.phone, zona:vaS.zona,
+      operatore:v0cBtn ? v0cBtn.lbl : '', costoAttuale:v0dBtn ? v0dBtn.lbl : '',
+      utilizzo:v1btn ? v1btn.lbl : '', connessione:v2btn ? v2btn.lbl : '',
+      sim:vaS.a.V3 || '', lucegas:vaS.lgInt ? 'Sì' : 'No',
+      tipo:isBiz ? 'Business' : 'Privato', offertaConsigliata:offer.name,
+      fonte:'Landing VideoAsk', timestamp:new Date().toISOString()
+    })
+  }).catch(function(){});
+}
+
+// ── RESET ────────────────────────────────────────────────────────────────────
+function vaReset(){
+  vaS = {step:'V0',nome:'',phone:'',zona:'',operatore:'',costo:'',a:{},lgInt:false,history:[],_resultShown:false};
+  vaIsPaused = false;
+  if (vaProgressInt){ clearInterval(vaProgressInt); vaProgressInt = null; }
+  document.getElementById('vaBtns').style.display  = 'none';
+  document.getElementById('vaForm').style.display   = 'none';
+  document.getElementById('vaResult').style.display = 'none';
+  document.getElementById('vaBackBtn').style.display = 'none';
+  document.getElementById('vaPauseBtn').style.display = 'none';
+  document.getElementById('vaMuteOverlay').style.display = 'none';
+  document.getElementById('vaPausedOverlay').style.display = 'none';
+  document.getElementById('vaProgressBar').style.width = '0%';
+  document.getElementById('vaName').value  = '';
+  document.getElementById('vaPhone').value = '';
+  document.getElementById('vaZona').value  = '';
+  document.getElementById('vaZonaAltro').value = '';
+  document.getElementById('vaZonaAltro').style.display = 'none';
+  vaCheckForm();
+  if (vaVid){ try { vaVid.pause(); vaVid.currentTime = 0; vaVid.muted = true; } catch(e){} }
+  document.getElementById('vaPlayScreen').style.display = 'flex';
+}
+</script>
+</body>
+</html>
